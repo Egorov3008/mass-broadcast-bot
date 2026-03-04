@@ -1,0 +1,12 @@
+# Telegram Mass Broadcast - Requirements
+
+# Core dependencies
+pyrogram==2.0.106
+psycopg2-binary==2.9.11
+
+# SSH support
+paramiko==4.0.0
+
+# For audio processing (if needed)
+faster-whisper==1.2.1
+pydub==0.25.1
