@@ -36,6 +36,7 @@ wheels/
 # Pyrogram sessions
 *.session
 *.session-journal
+broadcast_client2_session/
 
 # Logs
 *.log
@@ -60,3 +61,7 @@ Thumbs.db
 *.tmp
 *.bak
 *.cache
+
+# User data (generated, not version controlled)
+users_with_active_keys.txt
+users.txt

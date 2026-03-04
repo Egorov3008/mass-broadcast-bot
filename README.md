@@ -19,13 +19,19 @@ python -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-pip install pyrogram psycopg2-binary paramiko
+pip install -r requirements.txt
 ```
 
 ## 🔐 Configuration
 
-Create `.env` file:
+1. **Get Telegram API credentials from** [my.telegram.org](https://my.telegram.org)
 
+2. **Create `.env` file:**
+```bash
+cp .env.example .env
+```
+
+3. **Edit `.env`:**
 ```bash
 TELEGRAM_API_ID=your_api_id
 TELEGRAM_API_HASH=your_api_hash
@@ -37,7 +43,7 @@ TELEGRAM_PHONE=+79322490462
 ### Authorize first time:
 
 ```bash
-python authorize.py
+python mass_broadcast.py --message "Test" --delay 1
 ```
 
 Enter SMS code from Telegram.
@@ -67,6 +73,14 @@ WHERE k.expiry_time > EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)
 ORDER BY k.tg_id;
 ```
 
+### Get users from database:
+
+```bash
+python get_users_from_db.py
+```
+
+This creates `users_with_active_keys.txt` with active users.
+
 ## ⚙️ Systemd Service (optional)
 
 Create `/etc/systemd/system/mass-broadcast.service`:
@@ -79,8 +93,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/.openclaw/workspace
-ExecStart=/root/.openclaw/workspace/venv/bin/python mass_broadcast.py --message "Broadcast" --delay 5
+WorkingDirectory=/root/.openclaw/workspace/mass-broadcast
+ExecStart=/root/.openclaw/workspace/mass-broadcast/venv/bin/python mass_broadcast.py --message "Broadcast" --delay 5
 Restart=always
 RestartSec=10
 
@@ -110,10 +124,24 @@ After broadcast completes:
 
 ## 🛡️ Security
 
-- Never commit `.env` files to GitHub
+- **DO NOT commit `.env` files** - contains API credentials
+- **DO NOT commit `users_with_active_keys.txt`** - contains user IDs
 - Store API credentials in secure location
 - Use SSH tunnel for database access
 - Rate limiting with flood wait handling
+
+## 📁 File Structure
+
+```
+mass-broadcast/
+├── .env.example              # Environment template
+├── .gitignore                # Git ignore rules
+├── README.md                 # This file
+├── requirements.txt          # Python dependencies
+├── mass_broadcast.py         # Main broadcast script
+├── get_users_from_db.py      # Generate user list
+└── users_with_active_keys.txt # (generated, not committed)
+```
 
 ## 📄 License
 
